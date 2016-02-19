@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SADebug", "SADebug\SADebug.csproj", "{94869FFC-A4A3-426F-98B8-D5042AD6311C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SADebugEditor", "SADebugEditor\SADebugEditor.csproj", "{DEF1F776-2013-40EC-BC59-CA1827351D3B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		ReleaseNamespace|Any CPU = ReleaseNamespace|Any CPU
+		DebugNamespace|Any CPU = DebugNamespace|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94869FFC-A4A3-426F-98B8-D5042AD6311C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94869FFC-A4A3-426F-98B8-D5042AD6311C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94869FFC-A4A3-426F-98B8-D5042AD6311C}.DebugNamespace|Any CPU.ActiveCfg = DebugNamespace|Any CPU
+		{94869FFC-A4A3-426F-98B8-D5042AD6311C}.DebugNamespace|Any CPU.Build.0 = DebugNamespace|Any CPU
+		{94869FFC-A4A3-426F-98B8-D5042AD6311C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94869FFC-A4A3-426F-98B8-D5042AD6311C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94869FFC-A4A3-426F-98B8-D5042AD6311C}.ReleaseNamespace|Any CPU.ActiveCfg = ReleaseNamespace|Any CPU
+		{94869FFC-A4A3-426F-98B8-D5042AD6311C}.ReleaseNamespace|Any CPU.Build.0 = ReleaseNamespace|Any CPU
+		{DEF1F776-2013-40EC-BC59-CA1827351D3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF1F776-2013-40EC-BC59-CA1827351D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF1F776-2013-40EC-BC59-CA1827351D3B}.DebugNamespace|Any CPU.ActiveCfg = DebugNamespace|Any CPU
+		{DEF1F776-2013-40EC-BC59-CA1827351D3B}.DebugNamespace|Any CPU.Build.0 = DebugNamespace|Any CPU
+		{DEF1F776-2013-40EC-BC59-CA1827351D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF1F776-2013-40EC-BC59-CA1827351D3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEF1F776-2013-40EC-BC59-CA1827351D3B}.ReleaseNamespace|Any CPU.ActiveCfg = ReleaseNamespace|Any CPU
+		{DEF1F776-2013-40EC-BC59-CA1827351D3B}.ReleaseNamespace|Any CPU.Build.0 = ReleaseNamespace|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = SADebug\SADebug.csproj
+		outputpath = bin
+	EndGlobalSection
+EndGlobal
