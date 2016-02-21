@@ -77,6 +77,11 @@ public class DefaultDebugSystem : IDebugSystem {
 	public void AddLogEntry( Dbg.LogType logType, IDebugContext ctx, Exception exc, string message, out bool squelch ) {
 		squelch = false;
 		var obj = ctx as UE.Object;
+
+		if( obj == null ) {
+			return;
+		}
+
 		int instanceId = obj.GetInstanceID();
 		if( !entries.ContainsKey( instanceId ) ) {
 			entries[ instanceId ] = new ObjectLog( obj, logLength: 10 );
