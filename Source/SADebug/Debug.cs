@@ -37,16 +37,16 @@ public static partial class Dbg {
 	#endregion
 
 	#region Debug System Hook
-	private static void AddLogEntry( LogType logType, UE.Object ctx, Exception exc ) {
-		AddLogEntry( logType, ctx, exc, format: null, args: null );
+	private static void AddLogEntry( LogType logType, object ctx, Exception exc ) {
+		AddLogEntry( logType, ctx, exc, fmt: null, args: null );
 	}
 
-	private static void AddLogEntry( LogType logType, UE.Object ctx, string format, params object[] args ) {
-		AddLogEntry( logType, ctx, exc: null, format: format, args: args );
+	private static void AddLogEntry( LogType logType, object ctx, string fmt, params object[] args ) {
+		AddLogEntry( logType, ctx, exc: null, fmt: fmt, args: args );
 	}
 
-	private static void AddLogEntry( LogType logType, UE.Object ctx, Exception exc, string format, params object[] args ) {
-		string message = format != null ? string.Format( format, args ) :
+	private static void AddLogEntry( LogType logType, object ctx, Exception exc, string fmt, params object[] args ) {
+		string message = fmt != null ? string.Format( fmt, args ) :
 			exc != null ? exc.Message : null;
 
 		bool squelch = false;
@@ -63,22 +63,24 @@ public static partial class Dbg {
 			return;
 		}
 
+		var ueCtx = ctx as UE.Object;
+
 		switch( logType ) {
 			case LogType.Log: {
-				UE.Debug.Log( message, ctx );
+				UE.Debug.Log( message, ueCtx );
 				break;
 			}
 			case LogType.Warning: {
-				UE.Debug.LogWarning( message, ctx );
+				UE.Debug.LogWarning( message, ueCtx );
 				break;
 			}
 			case LogType.Error: {
-				UE.Debug.LogError( message, ctx );
+				UE.Debug.LogError( message, ueCtx );
 				break;
 			}
 			case LogType.Exception:
 			case LogType.Assertion: {
-				UE.Debug.LogException( exc, ctx );
+				UE.Debug.LogException( exc, ueCtx );
 				break;
 			}
 			default: {

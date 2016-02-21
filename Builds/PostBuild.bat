@@ -1,0 +1,1 @@
+cscript //nologo %~dp0PostBuild.vbs %1 %2 %3 %4

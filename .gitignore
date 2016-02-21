@@ -1,0 +1,17 @@
+sysinfo.txt
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+*.suo
+*.user
+*.userprefs
+*.userprefs.meta
+*.pidb
+*.mdb
+*.mdb.meta
+/Source/SADebug/bin
+/Source/SADebug/obj
+/Source/SADebugEditor/bin
+/Source/SADebugEditor/obj
