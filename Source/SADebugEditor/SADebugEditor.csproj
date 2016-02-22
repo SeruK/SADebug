@@ -64,6 +64,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)..\Builds\PostBuild.bat $(TargetPath) $(SolutionDir)..\Builds\ $(ConfigurationName) $(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>$(SolutionDir)..\Builds\PostBuild.bat $(TargetPath) $(SolutionDir)..\Builds\ $(ConfigurationName) Editor\$(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
 </Project>
