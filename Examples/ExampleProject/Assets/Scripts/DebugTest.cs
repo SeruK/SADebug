@@ -63,6 +63,11 @@ public class DebugTest : MonoBehaviour, IDebugSquelcher {
 		InvokeRepeating( "Spam", 0.5f, 0.5f );
 		InvokeRepeating( "ImportantMessage", 5.0f, 3.0f );
 	}
+
+	private void OnDisable() {
+		CancelInvoke( "Spam" );
+		CancelInvoke( "ImportantMessage" );
+	}
 	#endregion
 
 	#region IDebugSystem
@@ -72,11 +77,11 @@ public class DebugTest : MonoBehaviour, IDebugSquelcher {
 	#endregion
 
 	#region Logging
-	void Spam() {
+	private void Spam() {
 		Dbg.Log( this, "Spam" );
 	}
 
-	void ImportantMessage() {
+	private void ImportantMessage() {
 		Dbg.LogError( this, "Ah! Something bad happened" );
 	}
 	#endregion

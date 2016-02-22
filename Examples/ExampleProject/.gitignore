@@ -1,3 +1,11 @@
 /Library
 /Obj
 /Temp
+*.suo
+*.user
+*.pidb
+*.userprefs
+*.csproj
+*.unityproj
+*.sln
+.vs
