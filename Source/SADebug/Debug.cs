@@ -9,16 +9,6 @@ using SA;
 namespace SA {
 #endif
 public static partial class Dbg {
-	#region Types
-	public enum LogType {
-		Log,
-		Warning,
-		Error,
-		Exception,
-		Assertion
-	}
-	#endregion
-
 	#region Fields
 	// Will receive log hooks with logged messages.
 	public static IDebugSystem DebugSystem;
@@ -36,6 +26,12 @@ public static partial class Dbg {
 	}
 	#endregion
 
+	#region Boxing
+	public static DebugContext Context( object ctx ) {
+		return new DebugContext( ctx );
+	}
+	#endregion
+
 	#region Debug System Hook
 	private static void AddLogEntry( LogType logType, object ctx, Exception exc ) {
 		AddLogEntry( logType, ctx, exc, fmt: null, args: null );
@@ -46,17 +42,21 @@ public static partial class Dbg {
 	}
 
 	private static void AddLogEntry( LogType logType, object ctx, Exception exc, string fmt, params object[] args ) {
+		if( ctx is DebugContext ) {
+			ctx = ( (DebugContext)ctx ).obj;
+		}
+		
 		string message = fmt != null ? string.Format( fmt, args ) :
 			exc != null ? exc.Message : null;
 
 		bool squelch = false;
 
-		if( DebugSystem != null && ctx is IDebugContext ) {
-			DebugSystem.AddLogEntry( logType, (IDebugContext)ctx, exc, message, out squelch );
+		if( DebugSystem != null && ctx != null ) {
+			DebugSystem.AddLogEntry( logType, ctx, exc, message, out squelch );
 		}
 
-		if( ctx is IDebugSquelcherContext ) {
-			squelch |= ( (IDebugSquelcherContext)ctx ).ShouldSquelchLog( logType, exc, message );
+		if( ctx is IDebugSquelcher ) {
+			squelch |= ( (IDebugSquelcher)ctx ).ShouldSquelchLog( logType, exc, message );
 		}
 
 		if( squelch ) {
@@ -79,7 +79,7 @@ public static partial class Dbg {
 				break;
 			}
 			case LogType.Exception:
-			case LogType.Assertion: {
+			case LogType.Assert: {
 				UE.Debug.LogException( exc, ueCtx );
 				break;
 			}

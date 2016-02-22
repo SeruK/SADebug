@@ -12,40 +12,33 @@ namespace SA {
 [InitializeOnLoad]
 public static class DebugPreferences {
 	#region Fields
+	private static readonly string UNITY_ASSERTIONS_COMPILE_DEFINE = "UNITY_ASSERTIONS";
 	private static readonly string ASSERTIONS_COMPILE_DEFINE = "DEBUG_ASSERTIONS";
 	private static readonly string LOGGING_COMPILE_DEFINE = "DEBUG_LOGGING";
 
-	private static readonly bool UnityAssertionsEnabled =
-#if UNITY_ASSERTIONS
-		true;
-#else
-		false;
-#endif
+	private static List<string> ActiveDefines {
+		get {
+			BuildTargetGroup activeTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+			string[] activeDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup( activeTargetGroup ).Split( ';' );
+			return new List<string>( activeDefines );
+		}
 
-	private static readonly bool AssertionsEnabled =
-#if DEBUG_ASSERTIONS
-		true;
-#else
-		false;
-#endif
+		set {
+			BuildTargetGroup activeTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+			string definesString = value == null ? "" : string.Join( ";", value.ToArray() );
+			PlayerSettings.SetScriptingDefineSymbolsForGroup( activeTargetGroup, definesString );
+		}
+	}
 
-	private static readonly bool LoggingEnabled =
-#if DEBUG_LOGGING
-		true;
-#else
-		false;
-#endif
-
-	private static bool gui_unityAssertions;
 	private static bool gui_assertions;
 	private static bool gui_logging;
 	#endregion
 
 	#region Constructor
 	static DebugPreferences() {
-		gui_unityAssertions = UnityAssertionsEnabled;
-		gui_assertions = AssertionsEnabled;
-		gui_logging = LoggingEnabled;
+		List<string> activeDefines = ActiveDefines;
+		gui_assertions = activeDefines.Contains( ASSERTIONS_COMPILE_DEFINE );
+		gui_logging    = activeDefines.Contains( LOGGING_COMPILE_DEFINE );
 	}
 	#endregion
 
@@ -61,17 +54,22 @@ public static class DebugPreferences {
 		string activeTargetGroupName = Enum.GetName( typeof(BuildTargetGroup), activeTargetGroup );
 		EditorGUILayout.HelpBox( "Settings for " + activeTargetGroupName, MessageType.Info );
 
-		if( gui_assertions && !gui_unityAssertions ) {
+		string[] activeDefines = EditorUserBuildSettings.activeScriptCompilationDefines;
+		bool unityAssertionsEnabled = -1 != Array.IndexOf( activeDefines, UNITY_ASSERTIONS_COMPILE_DEFINE );
+		bool assertionsEnabled = -1 != Array.IndexOf( activeDefines, ASSERTIONS_COMPILE_DEFINE );
+		bool loggingEnabled = -1 != Array.IndexOf( activeDefines, LOGGING_COMPILE_DEFINE );
+
+		if( gui_assertions && !unityAssertionsEnabled ) {
 			EditorGUILayout.HelpBox( "Unity assertions need to be enabled for debug assertions to work.", MessageType.Warning );
 		}
 
 		EditorGUI.BeginChangeCheck();
 		EditorGUI.BeginDisabledGroup( disabled: true );
-		gui_unityAssertions = EditorGUILayout.Toggle( "Unity Assertions", gui_unityAssertions );
+		EditorGUILayout.Toggle( "Unity Assertions", unityAssertionsEnabled );
 		EditorGUI.EndDisabledGroup();
 		gui_assertions = EditorGUILayout.Toggle( "Assertions", gui_assertions );
 		gui_logging = EditorGUILayout.Toggle( "Logging", gui_logging );
-		bool enabled = gui_assertions != AssertionsEnabled || gui_logging != LoggingEnabled;
+		bool enabled = gui_assertions != assertionsEnabled || gui_logging != loggingEnabled;
 		EditorGUI.BeginDisabledGroup( !enabled );
 		if( GUILayout.Button( "Apply" ) ) {
 			Apply();
@@ -86,9 +84,7 @@ public static class DebugPreferences {
 			return;
 		}
 
-		BuildTargetGroup activeTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
-		string[] activeDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup( activeTargetGroup ).Split( ';' );
-		var defines = new List<string>( activeDefines );
+		List<string> defines = ActiveDefines;
 		
 		if( gui_assertions && !defines.Contains( ASSERTIONS_COMPILE_DEFINE ) ) {
 			defines.Add( ASSERTIONS_COMPILE_DEFINE );
@@ -106,8 +102,7 @@ public static class DebugPreferences {
 			defines.Remove( LOGGING_COMPILE_DEFINE );
 		}
 
-		string newDefines = string.Join( ";", defines.ToArray() );
-		PlayerSettings.SetScriptingDefineSymbolsForGroup( activeTargetGroup, newDefines );
+		ActiveDefines = defines;
 	}
 	#endregion
 }
