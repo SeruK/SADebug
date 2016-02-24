@@ -1,6 +1,4 @@
-﻿#define DEBUG_ASSERTIONS
-
-using UnityEngine;
+﻿using UnityEngine;
 using UE = UnityEngine;
 using UEAssert = UnityEngine.Assertions.Assert;
 using System;
@@ -19,6 +17,7 @@ public static partial class Dbg  {
 		#region Properties
 		public static bool RaiseExceptions {
 			get { return UEAssert.raiseExceptions; }
+			set { UEAssert.raiseExceptions = value; }
 		}
 		#endregion
 

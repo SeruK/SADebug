@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;DEBUG_LOGGING;DEBUG_ASSERTIONS;UNITY_ASSERTIONS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
@@ -29,6 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
+    <DefineConstants>DEBUG_LOGGING;DEBUG_ASSERTIONS;UNITY_ASSERTIONS</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseNamespace|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -37,7 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
-    <DefineConstants>COMPILE_NAMESPACE</DefineConstants>
+    <DefineConstants>COMPILE_NAMESPACE;DEBUG_LOGGING;DEBUG_ASSERTIONS;UNITY_ASSERTIONS</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugNamespace|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -45,7 +46,7 @@
     <OutputPath>bin\DebugNamespace\</OutputPath>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>True</DebugSymbols>
-    <DefineConstants>DEBUG;COMPILE_NAMESPACE</DefineConstants>
+    <DefineConstants>DEBUG;COMPILE_NAMESPACE;DEBUG_LOGGING;DEBUG_ASSERTIONS;UNITY_ASSERTIONS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
