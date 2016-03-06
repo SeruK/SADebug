@@ -15,22 +15,27 @@ public static partial class Dbg {
 	}
 
 	public interface IRecordedValueDrawer<TVal> : IRecordedValue<TVal> {
-		void Draw( string name, IList<Frame<TVal>> frames );
+		void Draw( string name, IList<RecordedValue<TVal>> frames );
 	}
 
-	public struct Frame<TVal> {
+	public struct RecordedValue<TVal> {
 		public readonly TVal value;
-		public readonly int count;
+		public readonly int frame;
+
+		public RecordedValue( TVal value, int frame ) {
+			this.value = value;
+			this.frame = frame;
+		}
 	}
 
 	public delegate TVal RawValueRecorder<TSelf, TVal>( TSelf self );
 	public delegate IRecordedValue<TVal> ValueRecorder<TSelf, TVal>( TSelf self );
-	public delegate bool RecordPredicate<TSelf, TVal>( TSelf self, Frame<TVal> last, Frame<TVal> curr );
+	public delegate bool RecordPredicate<TSelf, TVal>( TSelf self, RecordedValue<TVal> last, RecordedValue<TVal> curr );
 
 	internal struct RawValueWrapper<TVal> : IRecordedValue<TVal> {
 		public TVal recordedValue { get; private set; }
 
-		public RawValueWrapper( TVal value ) {
+		public RawValueWrapper( TVal value ) : this() {
 			this.recordedValue = value;
 		}
 	}

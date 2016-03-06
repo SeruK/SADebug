@@ -21,19 +21,19 @@ public class DefaultDebugSystem : IDebugSystem, IDebugMonitor {
 
 	public struct ObjectLog {
 		private readonly Queue<LogEntry> logs;
-		private readonly int logLength;
+		private readonly int maxLogLength;
 
 		public IEnumerable<LogEntry> Logs {
 			get { return logs; }
 		}
 
-		public ObjectLog( UE.Object obj, int logLength ) {
+		public ObjectLog( int maxLogLength ) {
 			this.logs = new Queue<LogEntry>();
-			this.logLength = logLength;
+			this.maxLogLength = maxLogLength;
 		}
 
 		public void AddLogEntry( LogEntry entry ) {
-			if( logs.Count >= logLength ) {
+			if( logs.Count >= maxLogLength ) {
 				logs.Dequeue();
 			}
 			logs.Enqueue( entry );
@@ -41,27 +41,55 @@ public class DefaultDebugSystem : IDebugSystem, IDebugMonitor {
 	}
 
 	public interface IMonitoredValue {
-		void Record( object self );
+		void Record( object self, int frameCount );
 	}
 
 	public class MonitoredValue<TSelf, TVal> : IMonitoredValue {
 		public readonly string name;
-		private readonly List<TVal> recordedValues;
+		private readonly List<Dbg.RecordedValue<TVal>> recordedValues;
+		private readonly int maxRecordedValues;
 		private readonly Dbg.ValueRecorder<TSelf, TVal> recorder;
 		private readonly Dbg.RecordPredicate<TSelf, TVal> predicate;
 
-		public MonitoredValue( string name, Dbg.ValueRecorder<TSelf, TVal> recorder, Dbg.RecordPredicate<TSelf, TVal> predicate, int overFrames ) {
-
+		public MonitoredValue( string name, Dbg.ValueRecorder<TSelf, TVal> recorder, Dbg.RecordPredicate<TSelf, TVal> predicate, int maxRecordedValues ) {
+			this.name = name;
+			this.recorder = recorder;
+			this.predicate = predicate;
+			this.recordedValues = new List<Dbg.RecordedValue<TVal>>();
+			this.maxRecordedValues = maxRecordedValues;
 		}
 
-		public void Record( object self ) {
-			
+		public void Record( object self, int frameCount ) {
+			TVal newValue = recorder( (TSelf)self ).recordedValue;
+			var newFrame = new Dbg.RecordedValue<TVal>( newValue, frameCount );
+			bool shouldStore = true;
+			if( predicate != null ) {
+				Dbg.RecordedValue<TVal> lastFrame = recordedValues.Count == 0 ? newFrame :
+					(Dbg.RecordedValue<TVal>) recordedValues[ recordedValues.Count - 1 ];
+				shouldStore = predicate( (TSelf)self, lastFrame, newFrame );
+			}
+			if( shouldStore ) {
+				if( recordedValues.Count + 1 > maxRecordedValues ) {
+					recordedValues.RemoveAt( 0 );
+				}
+				recordedValues.Add( newFrame );
+			}
 		}
     }
 
-	public struct ObjectMonitor {
+	public class ObjectMonitor {
 		//public void Monitor<TSelf, TVal>( TSelf self, string name, Dbg.ValueRecorder<TSelf, TVal> recorder, Dbg.RecordPredicate<TSelf, TVal> predicate, int overFrames ) {
-        private readonly Dictionary<string, List<IMonitoredValue>> values;
+        private Dictionary<string, List<IMonitoredValue>> values = new Dictionary<string, List<IMonitoredValue>>();
+
+		public void AddMonitoredValue<TSelf, TVal>( string name, Dbg.ValueRecorder<TSelf, TVal> recorder, Dbg.RecordPredicate<TSelf, TVal> predicate, int maxRecordedValues ) {
+			Dbg.Assert.IsFalse( string.IsNullOrEmpty( name ) );
+			Dbg.Assert.IsFalse( values.ContainsKey( name ) );
+			var monitoredValue = new MonitoredValue<TSelf, TVal>( name, recorder, predicate, maxRecordedValues );
+			if( !values.ContainsKey( name ) ) {
+				values[ name ] = new List<IMonitoredValue>();
+			}
+			values[ name ].Add( monitoredValue );
+		}
 	}
 
 	public class DebugEntry {
@@ -74,7 +102,7 @@ public class DefaultDebugSystem : IDebugSystem, IDebugMonitor {
 
 		private readonly WeakReference objectRef;
 		public readonly ObjectLog log = new ObjectLog();
-		public readonly ObjectMonitor monitor;
+		public readonly ObjectMonitor monitor = new ObjectMonitor();
 
 		public DebugEntry( object obj ) {
 			this.objectRef = new WeakReference( obj );
@@ -99,18 +127,25 @@ public class DefaultDebugSystem : IDebugSystem, IDebugMonitor {
 	#endregion
 
 	#region Methods
+	private DebugEntry GetOrAddDebugEntry( object ctx ) {
+		Dbg.Assert.IsNotNull( ctx );
+		int hashCode = ctx.GetHashCode();
+		if( !entries.ContainsKey( hashCode ) ) {
+			entries[ hashCode ] = new DebugEntry( ctx );
+		}
+		return entries[ hashCode ];
+	}
+
 	public void AddLogEntry( LogType logType, object ctx, Exception exc, string message, out bool squelch ) {
 		squelch = false;
 
-		int hashCode = ctx.GetHashCode();
-		if( !entries.ContainsKey( hashCode ) ) {
-			entries[ hashCode ] = new ObjectLog( obj, logLength: 10 );
-		}
-		entries[ hashCode ].log.AddLogEntry( new LogEntry( Time.frameCount, logType, exc, message ) );
+		DebugEntry entry = GetOrAddDebugEntry( ctx );
+		entry.log.AddLogEntry( new LogEntry( Time.frameCount, logType, exc, message ) );
 	}
 
-	public void Monitor<TSelf, TVal>( TSelf self, string name, Dbg.ValueRecorder<TSelf, TVal> recorder, Dbg.RecordPredicate<TSelf, TVal> predicate, int overFrames ) {
-		throw new NotImplementedException();
+	public void Monitor<TSelf, TVal>( TSelf self, string name, Dbg.ValueRecorder<TSelf, TVal> recorder, Dbg.RecordPredicate<TSelf, TVal> predicate, int maxRecordedFrames ) {
+		DebugEntry entry = GetOrAddDebugEntry( self );
+		entry.monitor.AddMonitoredValue( name, recorder, predicate, maxRecordedFrames );
 	}
 
 	public void Clean() {

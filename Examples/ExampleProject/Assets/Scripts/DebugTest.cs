@@ -89,11 +89,12 @@ public class DebugTest : MonoBehaviour, IDebugSquelcher {
 	#region GUI
 	void OnGUI() {
 		foreach( var log in debugSystem.Entries ) {
-			UE.Object obj = log.Object;
-			GUILayout.Label( obj == null ? "<null>" : obj.name );
-			foreach( var entry in log.Logs ) {
-				DrawEntry( entry.Frame, entry.LogType, entry.Message );
-			}
+			//if( log.ObjectAlive 
+			//UE.Object obj = log.Object;
+			//GUILayout.Label( obj == null ? "<null>" : obj.name );
+			//foreach( var entry in log.Logs ) {
+			//	DrawEntry( entry.Frame, entry.LogType, entry.Message );
+			//}
 		}
 	}
 

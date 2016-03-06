@@ -30,13 +30,13 @@ public static class DbgDraw {
 			get; internal set;
 		}
 
-		public void Draw( string name, IList<Dbg.Frame<TVal>> frames ) {
+		public void Draw( string name, IList<Dbg.RecordedValue<TVal>> frames ) {
 			GUI_CONTENT.text = name;
 			GUILayout.Label( GUI_CONTENT );
 			DrawContent( frames );
 		}
 
-		protected virtual void DrawContent( IList<Dbg.Frame<TVal>> frames ) {
+		protected virtual void DrawContent( IList<Dbg.RecordedValue<TVal>> frames ) {
 			var currentFrame = frames[ frames.Count - 1 ];
 			GUI_CONTENT.text = currentFrame.value.ToString();
 			GUILayout.Label( GUI_CONTENT );
@@ -44,7 +44,7 @@ public static class DbgDraw {
 	}
 
 	internal class PrimitiveDrawer<TVal> : EditorDrawer<TVal> {
-		protected override void DrawContent( IList<Dbg.Frame<TVal>> frames ) {
+		protected override void DrawContent( IList<Dbg.RecordedValue<TVal>> frames ) {
 			DrawFrames( frames );
 			base.DrawContent( frames );
 		}
@@ -53,7 +53,7 @@ public static class DbgDraw {
 	private static readonly PrimitiveDrawer<int> INT_DRAWER = new PrimitiveDrawer<int>();
 	private static readonly PrimitiveDrawer<float> FLOAT_DRAWER = new PrimitiveDrawer<float>();
 
-	private static void DrawFrames<TVal>( IList<Dbg.Frame<TVal>> frames ) {
+	private static void DrawFrames<TVal>( IList<Dbg.RecordedValue<TVal>> frames ) {
 		while( KEYFRAMES_BUFFER.Count < frames.Count ) {
 			KEYFRAMES_BUFFER.Add( new Keyframe() );
 		}
@@ -64,7 +64,7 @@ public static class DbgDraw {
 
 		for( int i = 0; i < frames.Count; ++i ) {
 			float time = i / (float)frames.Count;
-			Dbg.Frame<TVal> frame = frames[ i ];
+			Dbg.RecordedValue<TVal> frame = frames[ i ];
 			float value = Convert.ToSingle( frame.value );
 
 			KEYFRAMES_BUFFER[ i ] = new Keyframe( time, value );
