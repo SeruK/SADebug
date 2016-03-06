@@ -61,7 +61,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="DebugDrawers.cs" />
     <Compile Include="DebugPreferences.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SADebug\SADebug.csproj">
+      <Project>{94869ffc-a4a3-426f-98b8-d5042ad6311c}</Project>
+      <Name>SADebug</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

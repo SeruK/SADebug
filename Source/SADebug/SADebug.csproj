@@ -59,6 +59,7 @@
     <Compile Include="Debug.Assertions.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Debug.Logging.cs" />
+    <Compile Include="Debug.Monitoring.cs" />
     <Compile Include="DebugContext.cs" />
     <Compile Include="DebugSystem.cs" />
   </ItemGroup>

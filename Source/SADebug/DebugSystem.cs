@@ -15,6 +15,10 @@ public interface IDebugSystem {
 	// message later.
 	void AddLogEntry( LogType logType, object ctx, Exception exc, string message, out bool squelch );
 }
+
+public interface IDebugMonitor {
+	void Monitor<TSelf, TVal>( TSelf self, string name, Dbg.ValueRecorder<TSelf, TVal> recorder, Dbg.RecordPredicate<TSelf, TVal> predicate, int overFrames );
+}
 #if COMPILE_NAMESPACE
 }
 #endif
