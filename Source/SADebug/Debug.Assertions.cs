@@ -413,7 +413,7 @@ public static partial class Dbg  {
 		#region Throwing
 		private static AssertException BoolException( object ctx, string userMsg, bool expected ) {
 			string msg = string.Format( "{0}Assertion Failed. Value was {1}.",
-				string.IsNullOrEmpty( userMsg ) ? "" : string.Format( "{0}{1}", Environment.NewLine, userMsg ),
+				string.IsNullOrEmpty( userMsg ) ? "" : string.Format( "{1}{0}", Environment.NewLine, userMsg ),
 				expected );
 			return new AssertException( ctx, msg );
 		}
@@ -421,7 +421,7 @@ public static partial class Dbg  {
 		private static AssertException EqualityException( object ctx, string userMsg, object actual, object expected, bool expectedEqual ) {
 			string msg = string.Format( "{1}Assertion Failed. Values are {2}equal.{0}Expected: {3} {4} {5}",
 				Environment.NewLine,
-				string.IsNullOrEmpty( userMsg ) ? "" : string.Format( "{0}{1}", Environment.NewLine, userMsg ),
+				string.IsNullOrEmpty( userMsg ) ? "" : string.Format( "{1}{0}", Environment.NewLine, userMsg ),
 				expectedEqual ? "not " : "",
 				actual,
 				expectedEqual ? "==" : "!=",
@@ -431,7 +431,7 @@ public static partial class Dbg  {
 
 		private static AssertException NullException( object ctx, string userMsg, bool expectedNull ) {
 			string msg = string.Format( "{0}Assertion Failed. Value was {1}null.",
-				string.IsNullOrEmpty( userMsg ) ? "" : string.Format( "{0}{1}", Environment.NewLine, userMsg ),
+				string.IsNullOrEmpty( userMsg ) ? "" : string.Format( "{1}{0}", Environment.NewLine, userMsg ),
 				expectedNull ? "not " : "" );
 			return new AssertException( ctx, msg );
 		}

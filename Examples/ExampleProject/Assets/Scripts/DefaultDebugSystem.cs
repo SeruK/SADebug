@@ -78,6 +78,10 @@ public class DefaultDebugSystem : IDebugSystem {
 		entries[ instanceId ].AddLogEntry( new LogEntry( Time.frameCount, logType, exc, message ) );
 	}
 
+	public void HandleAssertion( object ctx, Exception exc, out bool squelch ) {
+		squelch = false;
+	}
+
 	public void Clean() {
 		// TODO: This nicer (IndexBuffer)
 		var keys = entries.Keys;
