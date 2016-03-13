@@ -19,6 +19,10 @@ public struct DebugContext {
 public interface IDebugSquelcher {
 	bool ShouldSquelchLog( LogType logType, Exception exc, string message );
 }
+
+public interface IDebugExcSquelcher : IDebugSquelcher {
+	bool ShouldSquelchException( Exception exc );
+}
 #if COMPILE_NAMESPACE
 }
 #endif

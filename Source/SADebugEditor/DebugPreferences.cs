@@ -12,7 +12,6 @@ namespace SA {
 [InitializeOnLoad]
 public static class DebugPreferences {
 	#region Fields
-	private static readonly string UNITY_ASSERTIONS_COMPILE_DEFINE = "UNITY_ASSERTIONS";
 	private static readonly string ASSERTIONS_COMPILE_DEFINE = "DEBUG_ASSERTIONS";
 	private static readonly string LOGGING_COMPILE_DEFINE = "DEBUG_LOGGING";
 
@@ -55,18 +54,10 @@ public static class DebugPreferences {
 		EditorGUILayout.HelpBox( "Settings for " + activeTargetGroupName, MessageType.Info );
 
 		string[] activeDefines = EditorUserBuildSettings.activeScriptCompilationDefines;
-		bool unityAssertionsEnabled = -1 != Array.IndexOf( activeDefines, UNITY_ASSERTIONS_COMPILE_DEFINE );
 		bool assertionsEnabled = -1 != Array.IndexOf( activeDefines, ASSERTIONS_COMPILE_DEFINE );
 		bool loggingEnabled = -1 != Array.IndexOf( activeDefines, LOGGING_COMPILE_DEFINE );
 
-		if( gui_assertions && !unityAssertionsEnabled ) {
-			EditorGUILayout.HelpBox( "Unity assertions need to be enabled for debug assertions to work.", MessageType.Warning );
-		}
-
 		EditorGUI.BeginChangeCheck();
-		EditorGUI.BeginDisabledGroup( disabled: true );
-		EditorGUILayout.Toggle( "Unity Assertions", unityAssertionsEnabled );
-		EditorGUI.EndDisabledGroup();
 		gui_assertions = EditorGUILayout.Toggle( "Assertions", gui_assertions );
 		gui_logging = EditorGUILayout.Toggle( "Logging", gui_logging );
 		bool enabled = gui_assertions != assertionsEnabled || gui_logging != loggingEnabled;

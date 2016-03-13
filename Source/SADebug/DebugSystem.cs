@@ -14,6 +14,8 @@ public interface IDebugSystem {
 	// context implementing IDebugSquelcher can also chose to squelch the
 	// message later.
 	void AddLogEntry( LogType logType, object ctx, Exception exc, string message, out bool squelch );
+
+	void HandleAssertion( object ctx, Exception exc, out bool squelch );
 }
 #if COMPILE_NAMESPACE
 }

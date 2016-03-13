@@ -11,13 +11,20 @@ using SA;
 namespace SA {
 #endif
 public static partial class Dbg  {
+	public class AssertException : Exception {
+		public readonly object context;
+		public AssertException( object ctx, string message ) : base( message ) {
+			this.context = ctx;
+		}
+	}
+
 	// Uses UnityEngine.Assertions.Assert under the hood, but adds DebugSystem hook.
 	// So many overloads...
 	public static class Assert {
 		#region Properties
 		public static bool RaiseExceptions {
-			get { return UEAssert.raiseExceptions; }
-			set { UEAssert.raiseExceptions = value; }
+			get;
+			set;
 		}
 		#endregion
 
@@ -44,10 +51,8 @@ public static partial class Dbg  {
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsTrue( bool cond, object ctx, string fmt, params object[] args ) {
-			try {
-				string message = string.IsNullOrEmpty( fmt ) ? null : string.Format( fmt, args );
-				UEAssert.IsTrue( cond, message );
-			} catch( Exception exc ) {
+			if( !cond ) {
+				AssertException exc = BoolException( ctx, string.Format( fmt, args ), expected: true );
 				Throw( ctx, exc );
 			}
 		}
@@ -76,10 +81,8 @@ public static partial class Dbg  {
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsFalse( bool cond, object ctx, string fmt, params object[] args ) {
-			try {
-				string message = string.IsNullOrEmpty( fmt ) ? null : string.Format( fmt, args );
-				UEAssert.IsFalse( cond, message );
-			} catch( Exception exc ) {
+			if( cond ) {
+				AssertException exc = BoolException( ctx, string.Format( fmt, args ), expected: false );
 				Throw( ctx, exc );
 			}
 		}
@@ -108,10 +111,8 @@ public static partial class Dbg  {
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsNull<T>( T value, object ctx, string fmt, params object[] args ) where T : class {
-			try {
-				string message = string.IsNullOrEmpty( fmt ) ? null : string.Format( fmt, args );
-				UEAssert.IsNull( value, message );
-			} catch( Exception exc ) {
+			if( value != null ) {
+				AssertException exc = NullException( ctx, string.Format( fmt, args ), expectedNull: true );
 				Throw( ctx, exc );
 			}
 		}
@@ -140,10 +141,8 @@ public static partial class Dbg  {
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsNotNull<T>( T value, object ctx, string fmt, params object[] args ) where T : class {
-			try {
-				string message = string.IsNullOrEmpty( fmt ) ? null : string.Format( fmt, args );
-				UEAssert.IsNotNull( value, message );
-			} catch( Exception exc ) {
+			if( value == null ) {
+				AssertException exc = NullException( ctx, string.Format( fmt, args ), expectedNull: false );
 				Throw( ctx, exc );
 			}
 		}
@@ -212,10 +211,8 @@ public static partial class Dbg  {
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, object ctx, string fmt, params object[] args ) {
-			try {
-				string message = string.IsNullOrEmpty( fmt ) ? null : string.Format( fmt, args );
-				UEAssert.AreEqual( expected, actual, message, comparer );
-			} catch( Exception exc ) {
+			if( !comparer.Equals( expected, actual ) ) {
+				AssertException exc = EqualityException( ctx, string.Format( fmt, args ), actual, expected, expectedEqual: true );
 				Throw( ctx, exc );
 			}
 		}
@@ -284,10 +281,8 @@ public static partial class Dbg  {
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, object ctx, string fmt, params object[] args ) {
-			try {
-				string message = string.IsNullOrEmpty( fmt ) ? null : string.Format( fmt, args );
-				UEAssert.AreNotEqual( expected, actual, message, comparer );
-			} catch( Exception exc ) {
+			if( comparer.Equals( expected, actual ) ) {
+				AssertException exc = EqualityException( ctx, string.Format( fmt, args ), actual, expected, expectedEqual: false );
 				Throw( ctx, exc );
 			}
 		}
@@ -341,10 +336,8 @@ public static partial class Dbg  {
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreApproxEqual( float expected, float actual, float tolerance, object ctx, string fmt, params object[] args ) {
-			try {
-				string message = string.IsNullOrEmpty( fmt ) ? null : string.Format( fmt, args );
-				UEAssert.AreApproximatelyEqual( expected, actual, tolerance, message );
-			} catch( Exception exc ) {
+			if( !ApproxEqual( expected, actual, tolerance ) ) {
+				AssertException exc = EqualityException( ctx, string.Format( fmt, args ), actual, expected, expectedEqual: true );
 				Throw( ctx, exc );
 			}
 		}
@@ -398,19 +391,63 @@ public static partial class Dbg  {
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotApproxEqual( float expected, float actual, float tolerance, object ctx, string fmt, params object[] args ) {
-			try {
-				string message = string.IsNullOrEmpty( fmt ) ? null : string.Format( fmt, args );
-				UEAssert.AreNotApproximatelyEqual( expected, actual, tolerance, message );
-			} catch( Exception exc ) {
+			if( ApproxEqual( expected, actual, tolerance ) ) {
+				AssertException exc = EqualityException( ctx, string.Format( fmt, args ), actual, expected, expectedEqual: false );
 				Throw( ctx, exc );
 			}
 		}
 		#endregion
 
+		#region Float Comparison
+
+		private static bool ApproxEqual( float a, float b, float tolerance ) {
+			if( a == b ) {
+				return true;
+			}
+
+			return Mathf.Abs( a - b ) < tolerance; 
+		}
+
+		#endregion
+
 		#region Throwing
+		private static AssertException BoolException( object ctx, string userMsg, bool expected ) {
+			string msg = string.Format( "{0}Assertion Failed. Value was {1}.",
+				string.IsNullOrEmpty( userMsg ) ? "" : string.Format( "{0}{1}", Environment.NewLine, userMsg ),
+				expected );
+			return new AssertException( ctx, msg );
+		}
+
+		private static AssertException EqualityException( object ctx, string userMsg, object actual, object expected, bool expectedEqual ) {
+			string msg = string.Format( "{1}Assertion Failed. Values are {2}equal.{0}Expected: {3} {4} {5}",
+				Environment.NewLine,
+				string.IsNullOrEmpty( userMsg ) ? "" : string.Format( "{0}{1}", Environment.NewLine, userMsg ),
+				expectedEqual ? "not " : "",
+				actual,
+				expectedEqual ? "==" : "!=",
+				expected );
+			return new AssertException( ctx, msg );
+		}
+
+		private static AssertException NullException( object ctx, string userMsg, bool expectedNull ) {
+			string msg = string.Format( "{0}Assertion Failed. Value was {1}null.",
+				string.IsNullOrEmpty( userMsg ) ? "" : string.Format( "{0}{1}", Environment.NewLine, userMsg ),
+				expectedNull ? "not " : "" );
+			return new AssertException( ctx, msg );
+		}
+
 		private static void Throw( object ctx, Exception exc ) {
 			AddLogEntry( LogType.Assert, ctx, exc );
-			throw exc; // Rethrow
+			bool squelch = !RaiseExceptions;
+			if( DebugSystem != null ) {
+				DebugSystem.HandleAssertion( ctx, exc, out squelch );
+			}
+			if( ctx != null && ctx is IDebugExcSquelcher ) {
+				squelch |= ( (IDebugExcSquelcher)ctx ).ShouldSquelchException( exc );
+			}
+			if( !squelch ) {
+				throw exc;
+			}
 		}
 		#endregion
 	}
