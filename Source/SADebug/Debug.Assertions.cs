@@ -31,26 +31,21 @@ public static partial class Dbg  {
 		#region IsTrue
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsTrue( bool cond ) {
-			IsTrue( cond, ctx: (object)null, fmt: null, args: null );
+			IsTrue( cond, new DebugContext(), fmt: null, args: null );
 		}
 		
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsTrue( bool cond, string fmt, params object[] args ) {
-			IsTrue( cond, ctx: (object)null, fmt: fmt, args: args );
+			IsTrue( cond, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsTrue( bool cond, UE.Object ctx, string fmt, params object[] args ) {
-			IsTrue( cond, ctx: (object)ctx, fmt: fmt, args: args );
+			IsTrue( cond, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsTrue( bool cond, DebugContext ctx, string fmt, params object[] args ) {
-			IsTrue( cond, ctx: (object)ctx, fmt: fmt, args: args );
-		}
-
-		[Conditional( "DEBUG_ASSERTIONS" )]
-		public static void IsTrue( bool cond, object ctx, string fmt, params object[] args ) {
 			if( !cond ) {
 				AssertException exc = BoolException( ctx, string.Format( fmt, args ), expected: true );
 				Throw( ctx, exc );
@@ -61,26 +56,21 @@ public static partial class Dbg  {
 		#region IsFalse
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsFalse( bool cond ) {
-			IsFalse( cond, ctx: (object)null, fmt: null, args: null );
+			IsFalse( cond, new DebugContext(), fmt: null, args: null );
 		}
 		
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsFalse( bool cond, string fmt, params object[] args ) {
-			IsFalse( cond, ctx: (object)null, fmt: fmt, args: args );
+			IsFalse( cond, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsFalse( bool cond, UE.Object ctx, string fmt, params object[] args ) {
-			IsFalse( cond, ctx: (object)ctx, fmt: fmt, args: args );
+			IsFalse( cond, new DebugContext( ctx ), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsFalse( bool cond, DebugContext ctx, string fmt, params object[] args ) {
-			IsFalse( cond, ctx: (object)ctx, fmt: fmt, args: args );
-		}
-
-		[Conditional( "DEBUG_ASSERTIONS" )]
-		public static void IsFalse( bool cond, object ctx, string fmt, params object[] args ) {
 			if( cond ) {
 				AssertException exc = BoolException( ctx, string.Format( fmt, args ), expected: false );
 				Throw( ctx, exc );
@@ -91,26 +81,21 @@ public static partial class Dbg  {
 		#region IsNull
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsNull<T>( T value ) where T : class {
-			IsNull( value, ctx: (object)null, fmt: null, args: null );
+			IsNull( value, new DebugContext(), fmt: null, args: null );
 		}
 		
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsNull<T>( T value, string fmt, params object[] args ) where T : class {
-			IsNull( value, ctx: (object)null, fmt: fmt, args: args );
+			IsNull( value, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsNull<T>( T value, UE.Object ctx, string fmt, params object[] args ) where T : class {
-			IsNull( value, ctx: (object)ctx, fmt: fmt, args: args );
+			IsNull( value, new DebugContext( ctx ), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsNull<T>( T value, DebugContext ctx, string fmt, params object[] args ) where T : class {
-			IsNull( value, ctx: (object)ctx, fmt: fmt, args: args );
-		}
-
-		[Conditional( "DEBUG_ASSERTIONS" )]
-		public static void IsNull<T>( T value, object ctx, string fmt, params object[] args ) where T : class {
 			if( value != null ) {
 				AssertException exc = NullException( ctx, string.Format( fmt, args ), expectedNull: true );
 				Throw( ctx, exc );
@@ -121,26 +106,21 @@ public static partial class Dbg  {
 		#region IsNotNull
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsNotNull<T>( T value ) where T : class {
-			IsNotNull( value, ctx: (object)null, fmt: null, args: null );
+			IsNotNull( value, new DebugContext(), fmt: null, args: null );
 		}
 		
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsNotNull<T>( T value, string fmt, params object[] args ) where T : class {
-			IsNotNull( value, ctx: (object)null, fmt: fmt, args: args );
+			IsNotNull( value, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsNotNull<T>( T value, UE.Object ctx, string fmt, params object[] args ) where T : class {
-			IsNotNull( value, ctx: (object)ctx, fmt: fmt, args: args );
+			IsNotNull( value, new DebugContext( ctx ), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void IsNotNull<T>( T value, DebugContext ctx, string fmt, params object[] args ) where T : class {
-			IsNotNull( value, ctx: (object)ctx, fmt: fmt, args: args );
-		}
-
-		[Conditional( "DEBUG_ASSERTIONS" )]
-		public static void IsNotNull<T>( T value, object ctx, string fmt, params object[] args ) where T : class {
 			if( value == null ) {
 				AssertException exc = NullException( ctx, string.Format( fmt, args ), expectedNull: false );
 				Throw( ctx, exc );
@@ -151,66 +131,61 @@ public static partial class Dbg  {
 		#region AreEqual
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual ) {
-			AreEqual( expected, actual, EqualityComparer<T>.Default, ctx: (object)null, fmt: null, args: null );
+			AreEqual( expected, actual, EqualityComparer<T>.Default, new DebugContext(), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, UE.Object ctx ) {
-			AreEqual( expected, actual, EqualityComparer<T>.Default, (object)ctx, fmt: null, args: null );
+			AreEqual( expected, actual, EqualityComparer<T>.Default, new DebugContext( ctx ), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, DebugContext ctx ) {
-			AreEqual( expected, actual, EqualityComparer<T>.Default, (object)ctx, fmt: null, args: null );
+			AreEqual( expected, actual, EqualityComparer<T>.Default, ctx, fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, string fmt, params object[] args ) {
-			AreEqual( expected, actual, EqualityComparer<T>.Default, ctx: (object)null, fmt: fmt, args: args );
+			AreEqual( expected, actual, EqualityComparer<T>.Default, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, UE.Object ctx, string fmt, params object[] args ) {
-			AreEqual( expected, actual, EqualityComparer<T>.Default, (object)ctx, fmt, args );
+			AreEqual( expected, actual, EqualityComparer<T>.Default, new DebugContext( ctx ), fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, DebugContext ctx, string fmt, params object[] args ) {
-			AreEqual( expected, actual, EqualityComparer<T>.Default, (object)ctx, fmt, args );
+			AreEqual( expected, actual, EqualityComparer<T>.Default, ctx, fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, IEqualityComparer<T> comparer ) {
-			AreEqual( expected, actual, comparer, ctx: (object)null, fmt: null, args: null );
+			AreEqual( expected, actual, comparer, new DebugContext(), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, UE.Object ctx ) {
-			AreEqual( expected, actual, comparer, (object)ctx, fmt: null, args: null );
+			AreEqual( expected, actual, comparer, new DebugContext( ctx ), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, DebugContext ctx ) {
-			AreEqual( expected, actual, comparer, (object)ctx, fmt: null, args: null );
+			AreEqual( expected, actual, comparer, ctx, fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, string fmt, params object[] args ) {
-			AreEqual( expected, actual, comparer, ctx: (object)null, fmt: fmt, args: args );
+			AreEqual( expected, actual, comparer, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, UE.Object ctx, string fmt, params object[] args ) {
-			AreEqual( expected, actual, comparer, ctx: (object)ctx, fmt: fmt, args: args );
+			AreEqual( expected, actual, comparer, new DebugContext( ctx ), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, DebugContext ctx, string fmt, params object[] args ) {
-			AreEqual( expected, actual, comparer, ctx: (object)ctx, fmt: fmt, args: args );
-		}
-
-		[Conditional( "DEBUG_ASSERTIONS" )]
-		public static void AreEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, object ctx, string fmt, params object[] args ) {
 			if( !comparer.Equals( expected, actual ) ) {
 				AssertException exc = EqualityException( ctx, string.Format( fmt, args ), actual, expected, expectedEqual: true );
 				Throw( ctx, exc );
@@ -221,66 +196,61 @@ public static partial class Dbg  {
 		#region AreNotEqual
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual ) where T : class {
-			AreNotEqual( expected, actual, EqualityComparer<T>.Default, ctx: (object)null, fmt: null, args: null );
+			AreNotEqual( expected, actual, EqualityComparer<T>.Default, new DebugContext(), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, UE.Object ctx ) where T : class {
-			AreNotEqual( expected, actual, EqualityComparer<T>.Default, (object)ctx, fmt: null, args: null );
+			AreNotEqual( expected, actual, EqualityComparer<T>.Default, new DebugContext( ctx ), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, DebugContext ctx ) where T : class {
-			AreNotEqual( expected, actual, EqualityComparer<T>.Default, (object)ctx, fmt: null, args: null );
+			AreNotEqual( expected, actual, EqualityComparer<T>.Default, ctx, fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, string fmt, params object[] args ) {
-			AreNotEqual( expected, actual, EqualityComparer<T>.Default, ctx: (object)null, fmt: fmt, args: args );
+			AreNotEqual( expected, actual, EqualityComparer<T>.Default, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, UE.Object ctx, string fmt, params object[] args ) {
-			AreNotEqual( expected, actual, EqualityComparer<T>.Default, (object)ctx, fmt, args );
+			AreNotEqual( expected, actual, EqualityComparer<T>.Default, new DebugContext( ctx ), fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, DebugContext ctx, string fmt, params object[] args ) {
-			AreNotEqual( expected, actual, EqualityComparer<T>.Default, (object)ctx, fmt, args );
+			AreNotEqual( expected, actual, EqualityComparer<T>.Default, ctx, fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, IEqualityComparer<T> comparer ) {
-			AreNotEqual( expected, actual, comparer, ctx: (object)null, fmt: null, args: null );
+			AreNotEqual( expected, actual, comparer, new DebugContext(), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, UE.Object ctx ) {
-			AreNotEqual( expected, actual, comparer, (object)ctx, fmt: null, args: null );
+			AreNotEqual( expected, actual, comparer, new DebugContext( ctx ), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, DebugContext ctx ) {
-			AreNotEqual( expected, actual, comparer, (object)ctx, fmt: null, args: null );
+			AreNotEqual( expected, actual, comparer, ctx, fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, string fmt, params object[] args ) {
-			AreNotEqual( expected, actual, comparer, ctx: (object)null, fmt: fmt, args: args );
+			AreNotEqual( expected, actual, comparer, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, UE.Object ctx, string fmt, params object[] args ) {
-			AreNotEqual( expected, actual, comparer, (object)ctx, fmt, args );
+			AreNotEqual( expected, actual, comparer, new DebugContext( ctx ), fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, DebugContext ctx, string fmt, params object[] args ) {
-			AreNotEqual( expected, actual, comparer, (object)ctx, fmt, args );
-		}
-
-		[Conditional( "DEBUG_ASSERTIONS" )]
-		public static void AreNotEqual<T>( T expected, T actual, IEqualityComparer<T> comparer, object ctx, string fmt, params object[] args ) {
 			if( comparer.Equals( expected, actual ) ) {
 				AssertException exc = EqualityException( ctx, string.Format( fmt, args ), actual, expected, expectedEqual: false );
 				Throw( ctx, exc );
@@ -291,51 +261,46 @@ public static partial class Dbg  {
 		#region AreApproxEqual
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreApproxEqual( float expected, float actual ) {
-			AreApproxEqual( expected, actual, 0.00001f, ctx: (object)null, fmt: null, args: null );
+			AreApproxEqual( expected, actual, 0.00001f, new DebugContext(), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreApproxEqual( float expected, float actual, UE.Object ctx ) {
-			AreApproxEqual( expected, actual, 0.00001f, (object)ctx, fmt: null, args: null );
+			AreApproxEqual( expected, actual, 0.00001f, new DebugContext( ctx ), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreApproxEqual( float expected, float actual, DebugContext ctx ) {
-			AreApproxEqual( expected, actual, 0.00001f, (object)ctx, fmt: null, args: null );
+			AreApproxEqual( expected, actual, 0.00001f, ctx, fmt: null, args: null );
 		}
 		
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreApproxEqual( float expected, float actual, string fmt, params object[] args ) {
-			AreApproxEqual( expected, actual, 0.00001f, ctx: (object)null, fmt: fmt, args: args );
+			AreApproxEqual( expected, actual, 0.00001f, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreApproxEqual( float expected, float actual, UE.Object ctx, string fmt, params object[] args ) {
-			AreApproxEqual( expected, actual, 0.00001f, (object)ctx, fmt, args );
+			AreApproxEqual( expected, actual, 0.00001f, new DebugContext( ctx ), fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreApproxEqual( float expected, float actual, DebugContext ctx, string fmt, params object[] args ) {
-			AreApproxEqual( expected, actual, 0.00001f, (object)ctx, fmt, args );
+			AreApproxEqual( expected, actual, 0.00001f, ctx, fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreApproxEqual( float expected, float actual, float tolerance, string fmt, params object[] args ) {
-			AreApproxEqual( expected, actual, tolerance, ctx: (object)null, fmt: fmt, args: args );
+			AreApproxEqual( expected, actual, tolerance, ctx: new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreApproxEqual( float expected, float actual, float tolerance, UE.Object ctx, string fmt, params object[] args ) {
-			AreApproxEqual( expected, actual, tolerance, (object)ctx, fmt, args );
+			AreApproxEqual( expected, actual, tolerance, new DebugContext( ctx ), fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreApproxEqual( float expected, float actual, float tolerance, DebugContext ctx, string fmt, params object[] args ) {
-			AreApproxEqual( expected, actual, tolerance, (object)ctx, fmt, args );
-		}
-
-		[Conditional( "DEBUG_ASSERTIONS" )]
-		public static void AreApproxEqual( float expected, float actual, float tolerance, object ctx, string fmt, params object[] args ) {
 			if( !ApproxEqual( expected, actual, tolerance ) ) {
 				AssertException exc = EqualityException( ctx, string.Format( fmt, args ), actual, expected, expectedEqual: true );
 				Throw( ctx, exc );
@@ -346,51 +311,46 @@ public static partial class Dbg  {
 		#region AreNotApproxEqual
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotApproxEqual( float expected, float actual ) {
-			AreNotApproxEqual( expected, actual, 0.00001f, ctx: (object)null, fmt: null, args: null );
+			AreNotApproxEqual( expected, actual, 0.00001f, ctx: new DebugContext(), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotApproxEqual( float expected, float actual, UE.Object ctx ) {
-			AreNotApproxEqual( expected, actual, 0.00001f, (object)ctx, fmt: null, args: null );
+			AreNotApproxEqual( expected, actual, 0.00001f, new DebugContext( ctx ), fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotApproxEqual( float expected, float actual, DebugContext ctx ) {
-			AreNotApproxEqual( expected, actual, 0.00001f, (object)ctx, fmt: null, args: null );
+			AreNotApproxEqual( expected, actual, 0.00001f, ctx, fmt: null, args: null );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotApproxEqual( float expected, float actual, string fmt, params object[] args ) {
-			AreNotApproxEqual( expected, actual, 0.00001f, ctx: (object)null, fmt: fmt, args: args );
+			AreNotApproxEqual( expected, actual, 0.00001f, new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotApproxEqual( float expected, float actual, UE.Object ctx, string fmt, params object[] args ) {
-			AreNotApproxEqual( expected, actual, 0.00001f, (object)ctx, fmt, args );
+			AreNotApproxEqual( expected, actual, 0.00001f, new DebugContext( ctx ), fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotApproxEqual( float expected, float actual, DebugContext ctx, string fmt, params object[] args ) {
-			AreNotApproxEqual( expected, actual, 0.00001f, (object)ctx, fmt, args );
+			AreNotApproxEqual( expected, actual, 0.00001f, ctx, fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotApproxEqual( float expected, float actual, float tolerance, string fmt, params object[] args ) {
-			AreNotApproxEqual( expected, actual, tolerance, ctx: (object)null, fmt: fmt, args: args );
+			AreNotApproxEqual( expected, actual, tolerance, ctx: new DebugContext(), fmt: fmt, args: args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotApproxEqual( float expected, float actual, float tolerance, UE.Object ctx, string fmt, params object[] args ) {
-			AreNotApproxEqual( expected, actual, tolerance, (object)ctx, fmt, args );
+			AreNotApproxEqual( expected, actual, tolerance, new DebugContext( ctx ), fmt, args );
 		}
 
 		[Conditional( "DEBUG_ASSERTIONS" )]
 		public static void AreNotApproxEqual( float expected, float actual, float tolerance, DebugContext ctx, string fmt, params object[] args ) {
-			AreNotApproxEqual( expected, actual, tolerance, (object)ctx, fmt, args );
-		}
-
-		[Conditional( "DEBUG_ASSERTIONS" )]
-		public static void AreNotApproxEqual( float expected, float actual, float tolerance, object ctx, string fmt, params object[] args ) {
 			if( ApproxEqual( expected, actual, tolerance ) ) {
 				AssertException exc = EqualityException( ctx, string.Format( fmt, args ), actual, expected, expectedEqual: false );
 				Throw( ctx, exc );
@@ -436,14 +396,14 @@ public static partial class Dbg  {
 			return new AssertException( ctx, msg );
 		}
 
-		private static void Throw( object ctx, Exception exc ) {
+		private static void Throw( DebugContext ctx, Exception exc ) {
 			AddLogEntry( LogType.Assert, ctx, exc );
 			bool squelch = !RaiseExceptions;
 			if( DebugSystem != null ) {
 				DebugSystem.HandleAssertion( ctx, exc, out squelch );
 			}
-			if( ctx != null && ctx is IDebugExcSquelcher ) {
-				squelch |= ( (IDebugExcSquelcher)ctx ).ShouldSquelchException( exc );
+			if( ctx.obj != null && ctx.obj is IDebugExcSquelcher ) {
+				squelch |= ( (IDebugExcSquelcher)ctx.obj ).ShouldSquelchException( exc );
 			}
 			if( !squelch ) {
 				throw exc;

@@ -63,9 +63,9 @@ public class DefaultDebugSystem : IDebugSystem {
 	#endregion
 
 	#region Methods
-	public void AddLogEntry( LogType logType, object ctx, Exception exc, string message, out bool squelch ) {
-		squelch = false;
-		var obj = ctx as UE.Object;
+	public void AddLogEntry( LogType logType, DebugContext ctx, Exception exc, Dbg.Message message, out bool squelch ) {
+		squelch = true;
+		UE.Object obj = ctx.unityObj;
 
 		if( obj == null ) {
 			return;
@@ -78,7 +78,7 @@ public class DefaultDebugSystem : IDebugSystem {
 		entries[ instanceId ].AddLogEntry( new LogEntry( Time.frameCount, logType, exc, message ) );
 	}
 
-	public void HandleAssertion( object ctx, Exception exc, out bool squelch ) {
+	public void HandleAssertion( DebugContext ctx, Exception exc, out bool squelch ) {
 		squelch = false;
 	}
 

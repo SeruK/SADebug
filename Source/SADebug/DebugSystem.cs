@@ -13,9 +13,9 @@ public interface IDebugSystem {
 	// Squelch indicates whether to output the message to the console. Note that
 	// context implementing IDebugSquelcher can also chose to squelch the
 	// message later.
-	void AddLogEntry( LogType logType, object ctx, Exception exc, string message, out bool squelch );
+	void AddLogEntry( LogType logType, DebugContext ctx, Exception exc, Dbg.Message msg, out bool squelch );
 
-	void HandleAssertion( object ctx, Exception exc, out bool squelch );
+	void HandleAssertion( DebugContext ctx, Exception exc, out bool squelch );
 }
 #if COMPILE_NAMESPACE
 }

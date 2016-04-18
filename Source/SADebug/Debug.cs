@@ -12,6 +12,8 @@ public static partial class Dbg {
 	#region Fields
 	// Will receive log hooks with logged messages.
 	public static IDebugSystem DebugSystem;
+
+	private static Message TempMessage = new Message();
 	#endregion
 
 	#region Break
@@ -27,43 +29,64 @@ public static partial class Dbg {
 	#endregion
 
 	#region Boxing
-	public static DebugContext Context( object ctx ) {
-		return new DebugContext( ctx );
+	public class Message {
+		public string stringValue {
+			get {
+				if( str == null ) {
+					str = args == null ? fmt : string.Format(fmt, args);
+				}
+				return str;
+			}
+		}
+
+		public static implicit operator string( Message msg ) {
+			return msg.stringValue;
+		}
+
+		internal string str;
+		internal string fmt;
+		internal object[] args;
+
+		internal void Reset( string fmt, object[] args ) {
+			this.fmt = fmt;
+			this.args = args;
+			this.str = null;
+		}
+	}
+
+	public static DebugContext Context( object ctx, UE.Object ueCtx = null ) {
+		return new DebugContext( ctx, ueCtx );
 	}
 	#endregion
 
 	#region Debug System Hook
-	private static void AddLogEntry( LogType logType, object ctx, Exception exc ) {
+	private static void AddLogEntry( LogType logType, DebugContext ctx, Exception exc ) {
 		AddLogEntry( logType, ctx, exc, fmt: null, args: null );
 	}
 
-	private static void AddLogEntry( LogType logType, object ctx, string fmt, params object[] args ) {
+	private static void AddLogEntry( LogType logType, DebugContext ctx, string fmt, params object[] args ) {
 		AddLogEntry( logType, ctx, exc: null, fmt: fmt, args: args );
 	}
 
-	private static void AddLogEntry( LogType logType, object ctx, Exception exc, string fmt, params object[] args ) {
-		if( ctx is DebugContext ) {
-			ctx = ( (DebugContext)ctx ).obj;
-		}
+	private static void AddLogEntry( LogType logType, DebugContext ctx, Exception exc, string fmt, params object[] args ) {
+		TempMessage.Reset( fmt, args );
 		
-		string message = fmt != null ? string.Format( fmt, args ) :
-			exc != null ? exc.Message : null;
-
 		bool squelch = false;
 
-		if( DebugSystem != null && ctx != null ) {
-			DebugSystem.AddLogEntry( logType, ctx, exc, message, out squelch );
+		if( DebugSystem != null ) {
+			DebugSystem.AddLogEntry( logType, ctx, exc, TempMessage, out squelch );
 		}
 
-		if( ctx is IDebugSquelcher ) {
-			squelch |= ( (IDebugSquelcher)ctx ).ShouldSquelchLog( logType, exc, message );
+		if( ctx.obj is IDebugSquelcher ) {
+			squelch |= ( (IDebugSquelcher)ctx.obj ).ShouldSquelchLog( logType, exc, TempMessage );
 		}
 
 		if( squelch ) {
 			return;
 		}
 
-		var ueCtx = ctx as UE.Object;
+		string message = TempMessage.stringValue;
+		var ueCtx = ctx.unityObj;
 
 		switch( logType ) {
 			case LogType.Log: {

@@ -55,12 +55,12 @@ public class DebugTest : MonoBehaviour, IDebugSquelcher {
 		Dbg.LogError( this, "Dbg.LogError" );
 
 		Dbg.Assert.IsTrue( true, this, "true should be true" );
-		//try {
+		try {
 			Dbg.Assert.IsTrue( false, this, "true should not be false" );
-		//} catch( System.Exception exc ) {
-		//	//Dbg.LogError( this, "Dbg.LogError in catch" );
-		//	//Dbg.LogExc( this, exc );
-		//}
+		} catch( System.Exception exc ) {
+			Dbg.LogError( this, "Dbg.LogError in catch" );
+			Dbg.LogExc( this, exc );
+		}
 
 		InvokeRepeating( "Spam", 0.5f, 0.5f );
 		InvokeRepeating( "ImportantMessage", 5.0f, 3.0f );
@@ -73,7 +73,7 @@ public class DebugTest : MonoBehaviour, IDebugSquelcher {
 	#endregion
 
 	#region IDebugSquelcher
-	public bool ShouldSquelchLog( LogType logType, System.Exception exc, string message ) {
+	public bool ShouldSquelchLog( LogType logType, System.Exception exc, Dbg.Message message ) {
 		return logType == LogType.Log;
 	}
 	#endregion
