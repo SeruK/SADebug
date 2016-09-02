@@ -133,6 +133,110 @@ public static partial class Dbg {
 	}
 	#endregion
 
+	#region LogOnce
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogOnceIf(bool cond, UE.Object ctx, string msg)
+	{
+		if(cond) { LogOnceRelease(new DebugContext(ctx), fmt: msg, args: null); }
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogOnceIf(bool cond, UE.Object ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogOnceRelease(new DebugContext(ctx), fmt: fmt, args: args); }
+	}
+	// --
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogOnceIf(bool cond, DebugContext ctx, string msg)
+	{
+		if(cond) { LogOnceRelease(ctx, fmt: msg, args: null); }
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogOnceIf(bool cond, DebugContext ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogOnceRelease(ctx, fmt: fmt, args: args); }
+	}
+	// --
+	public static void LogOnceReleaseIf(bool cond, UE.Object ctx, string msg)
+	{
+		if(cond) { LogOnceRelease(ctx: new DebugContext(ctx), fmt: msg, args: null); }
+	}
+
+	public static void LogOnceReleaseIf(bool cond, UE.Object ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogOnceRelease(ctx: new DebugContext(ctx), fmt: fmt, args: args); }
+	}
+	// --
+	public static void LogOnceReleaseIf(bool cond, DebugContext ctx, string msg)
+	{
+		if(cond) { LogOnceRelease(ctx, fmt: msg, args: null); }
+	}
+
+	public static void LogOnceReleaseIf(bool cond, DebugContext ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogOnceRelease(ctx, fmt: fmt, args: args); }
+	}
+	// --
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogOnce(UE.Object ctx, string msg)
+	{
+		LogOnceRelease(new DebugContext(ctx), fmt: msg, args: null);
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogOnce(UE.Object ctx, string fmt, params object[] args)
+	{
+		LogOnceRelease(new DebugContext(ctx), fmt: fmt, args: args);
+	}
+	// --
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogOnce(DebugContext ctx, string msg)
+	{
+		LogOnceRelease(ctx, fmt: msg, args: null);
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogOnce(DebugContext ctx, string fmt, params object[] args)
+	{
+		LogOnceRelease(ctx, fmt: fmt, args: args);
+	}
+	// --
+	public static void LogOnceRelease(UE.Object ctx, string msg)
+	{
+		var dbgCtx = new DebugContext(ctx);
+		if(CheckOnceToken(dbgCtx, identifier: msg))
+		{
+			AddLogEntry(LogType.Log, dbgCtx, msg, args: null);
+		}
+	}
+
+	public static void LogOnceRelease(UE.Object ctx, string fmt, params object[] args)
+	{
+		var dbgCtx = new DebugContext(ctx);
+		if(CheckOnceToken(dbgCtx, identifier: fmt))
+		{
+			AddLogEntry(LogType.Log, dbgCtx, fmt, args);
+		}
+	}
+	// --
+	public static void LogOnceRelease(DebugContext ctx, string msg)
+	{
+		if(CheckOnceToken(ctx, identifier: msg))
+		{
+			AddLogEntry(LogType.Log, ctx, msg, args: null);
+		}
+	}
+
+	public static void LogOnceRelease(DebugContext ctx, string fmt, params object[] args)
+	{
+		if(CheckOnceToken(ctx, identifier: fmt))
+		{
+			AddLogEntry(LogType.Log, ctx, fmt, args);
+		}
+	}
+	#endregion // LogOnce
+
 	#region Warn
 	[Conditional( "DEBUG_LOGGING" )]
 	public static void LogWarnIf( bool cond, string msg ) {
@@ -243,6 +347,110 @@ public static partial class Dbg {
 	}
 	#endregion
 
+	#region LogWarnOnce
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogWarnOnceIf(bool cond, UE.Object ctx, string msg)
+	{
+		if(cond) { LogWarnOnceRelease(new DebugContext(ctx), fmt: msg, args: null); }
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogWarnOnceIf(bool cond, UE.Object ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogWarnOnceRelease(new DebugContext(ctx), fmt: fmt, args: args); }
+	}
+	// --
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogWarnOnceIf(bool cond, DebugContext ctx, string msg)
+	{
+		if(cond) { LogWarnOnceRelease(ctx, fmt: msg, args: null); }
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogWarnOnceIf(bool cond, DebugContext ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogWarnOnceRelease(ctx, fmt: fmt, args: args); }
+	}
+	// --
+	public static void LogWarnOnceReleaseIf(bool cond, UE.Object ctx, string msg)
+	{
+		if(cond) { LogWarnOnceRelease(ctx: new DebugContext(ctx), fmt: msg, args: null); }
+	}
+
+	public static void LogWarnOnceReleaseIf(bool cond, UE.Object ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogWarnOnceRelease(ctx: new DebugContext(ctx), fmt: fmt, args: args); }
+	}
+	// --
+	public static void LogWarnOnceReleaseIf(bool cond, DebugContext ctx, string msg)
+	{
+		if(cond) { LogWarnOnceRelease(ctx, fmt: msg, args: null); }
+	}
+
+	public static void LogWarnOnceReleaseIf(bool cond, DebugContext ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogWarnOnceRelease(ctx, fmt: fmt, args: args); }
+	}
+	// --
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogWarnOnce(UE.Object ctx, string msg)
+	{
+		LogWarnOnceRelease(new DebugContext(ctx), fmt: msg, args: null);
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogWarnOnce(UE.Object ctx, string fmt, params object[] args)
+	{
+		LogWarnOnceRelease(new DebugContext(ctx), fmt: fmt, args: args);
+	}
+	// --
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogWarnOnce(DebugContext ctx, string msg)
+	{
+		LogWarnOnceRelease(ctx, fmt: msg, args: null);
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogWarnOnce(DebugContext ctx, string fmt, params object[] args)
+	{
+		LogWarnOnceRelease(ctx, fmt: fmt, args: args);
+	}
+	// --
+	public static void LogWarnOnceRelease(UE.Object ctx, string msg)
+	{
+		var dbgCtx = new DebugContext(ctx);
+		if(CheckOnceToken(dbgCtx, identifier: msg))
+		{
+			AddLogEntry(LogType.Warning, dbgCtx, msg, args: null);
+		}
+	}
+
+	public static void LogWarnOnceRelease(UE.Object ctx, string fmt, params object[] args)
+	{
+		var dbgCtx = new DebugContext(ctx);
+		if(CheckOnceToken(dbgCtx, identifier: fmt))
+		{
+			AddLogEntry(LogType.Warning, dbgCtx, fmt, args);
+		}
+	}
+	// --
+	public static void LogWarnOnceRelease(DebugContext ctx, string msg)
+	{
+		if(CheckOnceToken(ctx, identifier: msg))
+		{
+			AddLogEntry(LogType.Warning, ctx, msg, args: null);
+		}
+	}
+
+	public static void LogWarnOnceRelease(DebugContext ctx, string fmt, params object[] args)
+	{
+		if(CheckOnceToken(ctx, identifier: fmt))
+		{
+			AddLogEntry(LogType.Warning, ctx, fmt, args);
+		}
+	}
+	#endregion // LogWarnOnce
+
 	#region Error
 	[Conditional( "DEBUG_LOGGING" )]
 	public static void LogErrorIf( bool cond, string msg ) {
@@ -352,6 +560,110 @@ public static partial class Dbg {
 		AddLogEntry( LogType.Error, ctx, fmt, args );
 	}
 	#endregion
+
+	#region LogErrorOnce
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogErrorOnceIf(bool cond, UE.Object ctx, string msg)
+	{
+		if(cond) { LogErrorOnceRelease(new DebugContext(ctx), fmt: msg, args: null); }
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogErrorOnceIf(bool cond, UE.Object ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogErrorOnceRelease(new DebugContext(ctx), fmt: fmt, args: args); }
+	}
+	// --
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogErrorOnceIf(bool cond, DebugContext ctx, string msg)
+	{
+		if(cond) { LogErrorOnceRelease(ctx, fmt: msg, args: null); }
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogErrorOnceIf(bool cond, DebugContext ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogErrorOnceRelease(ctx, fmt: fmt, args: args); }
+	}
+	// --
+	public static void LogErrorOnceReleaseIf(bool cond, UE.Object ctx, string msg)
+	{
+		if(cond) { LogErrorOnceRelease(ctx: new DebugContext(ctx), fmt: msg, args: null); }
+	}
+
+	public static void LogErrorOnceReleaseIf(bool cond, UE.Object ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogErrorOnceRelease(ctx: new DebugContext(ctx), fmt: fmt, args: args); }
+	}
+	// --
+	public static void LogErrorOnceReleaseIf(bool cond, DebugContext ctx, string msg)
+	{
+		if(cond) { LogErrorOnceRelease(ctx, fmt: msg, args: null); }
+	}
+
+	public static void LogErrorOnceReleaseIf(bool cond, DebugContext ctx, string fmt, params object[] args)
+	{
+		if(cond) { LogErrorOnceRelease(ctx, fmt: fmt, args: args); }
+	}
+	// --
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogErrorOnce(UE.Object ctx, string msg)
+	{
+		LogErrorOnceRelease(new DebugContext(ctx), fmt: msg, args: null);
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogErrorOnce(UE.Object ctx, string fmt, params object[] args)
+	{
+		LogErrorOnceRelease(new DebugContext(ctx), fmt: fmt, args: args);
+	}
+	// --
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogErrorOnce(DebugContext ctx, string msg)
+	{
+		LogErrorOnceRelease(ctx, fmt: msg, args: null);
+	}
+
+	[Conditional("DEBUG_LOGGING")]
+	public static void LogErrorOnce(DebugContext ctx, string fmt, params object[] args)
+	{
+		LogErrorOnceRelease(ctx, fmt: fmt, args: args);
+	}
+	// --
+	public static void LogErrorOnceRelease(UE.Object ctx, string msg)
+	{
+		var dbgCtx = new DebugContext(ctx);
+		if(CheckOnceToken(dbgCtx, identifier: msg))
+		{
+			AddLogEntry(LogType.Error, dbgCtx, msg, args: null);
+		}
+	}
+
+	public static void LogErrorOnceRelease(UE.Object ctx, string fmt, params object[] args)
+	{
+		var dbgCtx = new DebugContext(ctx);
+		if(CheckOnceToken(dbgCtx, identifier: fmt))
+		{
+			AddLogEntry(LogType.Error, dbgCtx, fmt, args);
+		}
+	}
+	// --
+	public static void LogErrorOnceRelease(DebugContext ctx, string msg)
+	{
+		if(CheckOnceToken(ctx, identifier: msg))
+		{
+			AddLogEntry(LogType.Error, ctx, msg, args: null);
+		}
+	}
+
+	public static void LogErrorOnceRelease(DebugContext ctx, string fmt, params object[] args)
+	{
+		if(CheckOnceToken(ctx, identifier: fmt))
+		{
+			AddLogEntry(LogType.Error, ctx, fmt, args);
+		}
+	}
+	#endregion // LogErrorOnce
 
 	#region Exc
 	[Conditional( "DEBUG_LOGGING" )]
