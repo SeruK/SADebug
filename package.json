@@ -1,0 +1,13 @@
+{
+  "name": "com.seruk.sadebug",
+  "version": "1.4.0",
+  "displayName": "SADebug",
+  "description": "A nifty debug plugin for Unity3D.",
+  "samples": [
+    {
+      "displayName": "Sample",
+      "description": "A sample showing each type of log method and a debug system.",
+      "path": "Samples~/Sample"
+    }
+  ]
+}
