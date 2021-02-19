@@ -1,6 +1,6 @@
 {
   "name": "com.seruk.sadebug",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "displayName": "SADebug",
   "description": "A nifty debug plugin for Unity3D.",
   "samples": [
